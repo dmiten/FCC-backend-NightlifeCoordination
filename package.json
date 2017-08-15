@@ -4,7 +4,7 @@
   "description": "Test task for FCC",
   "main": "index.js",
   "scripts": {
-    "server": "node server",
+    "start": "node server",
     "build": "set NODE_ENV='production' && webpack -p --progress --colors",
     "watch": "webpack --progress --colors -d --watch"
   },
