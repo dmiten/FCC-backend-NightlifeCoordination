@@ -33,9 +33,8 @@ userSchema.virtual("password")
 });
 
 userSchema.methods.checkPassword = function (password) {
-  if (!password) return false;
-  if (!this.passwordHash) return false;
-  return crypto.pbkdf2Sync(password, this.salt, 1, 128, "sha1").toString() === this.passwordHash;
+  return (!password || !this.passwordHash) ? false :
+      crypto.pbkdf2Sync(password, this.salt, 1, 128, "sha1").toString() === this.passwordHash;
 };
 
 export default mongoose.model("User", userSchema);

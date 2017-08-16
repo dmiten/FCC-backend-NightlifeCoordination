@@ -10,29 +10,32 @@ import https from "https";
 import winston from "winston";
 
 // ▼--------------- { cert: cert.pem, key: key.pem } for HTTPS or falsy for HTTP
-import credentials from "./.data/credentials";
+import { credentials } from "./.data/credentials";
+
 import { dbStart } from "./handledb";
 import makePassport from "./makepassport";
 import router from "./router";
 
-const winstonOptions = { // ◄-------------------------------- log format options
-      colorize: true,
-      json: false,
-      timestamp: () => {
-        let date = new Date(Date.now());
-        return date.toLocaleString() + "." + date.getUTCMilliseconds();
-      }
-    },
-    log = new winston.Logger({
-      transports: [new winston.transports.Console(winstonOptions)]
-    });
+function getWinston() {
+  let winstonOptions = {
+        colorize: true,
+        json: false,
+        timestamp: () => {
+          let date = new Date(Date.now());
+          return date.toLocaleString() + "." + date.getUTCMilliseconds();
+        }
+      };
+  return new winston.Logger({
+    transports: [new winston.transports.Console(winstonOptions)]
+  });
+}
 
 export function serverStart() {
   dbStart(); // ◄------------- have to initialize mongo connection before server
 }
 
 export function serverLog(type, message) {
-  log[type](message);
+  getWinston()[type](message);
 }
 
 export function serverApp() {
@@ -46,7 +49,7 @@ export function serverApp() {
     expressFormat: true,
     meta: false,
     msg: "HTTP(s) {{ req.method }} {{ req.url }}",
-    transports: [new winston.transports.Console(winstonOptions)]
+    transports: [getWinston()]
   }));
   app.use(compression());
   app.use(express.static("./public/"));
@@ -69,7 +72,7 @@ export function serverApp() {
 
     httpApp.get("*", (req, res, next) => {
       res.redirect("https://" + req.hostname +":" + app.get("port") + req.url);
-      serverLog("info", "server - redirected to HTTPS.");
+      serverLog("info", "server - redirected to HTTPS");
     });
 
     http.createServer(httpApp).listen(httpApp.get("port"), () => {
