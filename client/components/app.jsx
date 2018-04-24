@@ -189,7 +189,7 @@ export default class App extends React.Component {
         return (
             <InputGroup.Button>
               <Button onClick={getLocationClickHandler}>
-                <span className="glyphicon glyphicon-map-marker"/>
+                <span className="fa fa-map-marker"/>
               </Button>
             </InputGroup.Button>
         )
@@ -210,12 +210,12 @@ export default class App extends React.Component {
                          value={this.state.searchInput}/>
             <InputGroup.Button>
               <Button onClick={() => this.setState({ searchInput: ""})}>
-                <span className="glyphicon glyphicon-stop"/>
+                <span className="fa fa-stop"/>
               </Button>
             </InputGroup.Button>
             <InputGroup.Button>
               <Button onClick={searchClickHandler}>
-                <span className="glyphicon glyphicon-search"/>
+                <span className="fa fa-search"/>
               </Button>
             </InputGroup.Button>
           </InputGroup>
